@@ -17,7 +17,7 @@ const CarFiltersOption: React.FC<CarFiltersOptionProps> = ({ carsList, setBrand,
   const Brandset = new Set<string>();
   const filterCarList = () => {
     carsList.forEach((elememt: Car) => {
-      Brandset.add(elememt.manufacturer); // Change 'manufacturer' to the correct property name if needed
+      Brandset.add(elememt.manufacturer); 
     });
     setBrandList(Array.from(Brandset));
   };
