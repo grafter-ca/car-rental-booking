@@ -5,7 +5,11 @@ import { ClerkProvider, SignedOut, SignIn, SignedIn } from "@clerk/nextjs";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Home/Footer"; // Import your Footer component
 
-const outfit = Outfit({ subsets: ["latin"] });
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"], // adjust as needed
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "DriveEasy Rentals",
@@ -20,16 +24,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <head />
-        <body className={`${outfit.className} antialiased flex flex-col min-h-screen`}>
+        <body
+          className={`${outfit.className} antialiased flex flex-col min-h-screen`}
+        >
           <SignedIn>
             <Navbar />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer /> {/* Footer inside SignedIn so it only shows when signed in */}
+            <main className="flex-grow">{children}</main>
+            <Footer />
           </SignedIn>
-          
+
           <SignedOut>
             <div className="flex items-center justify-center min-h-screen py-20">
               <SignIn />

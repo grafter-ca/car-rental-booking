@@ -6,6 +6,7 @@ import Hero from "@/components/Home/Hero";
 import SearchInput from "@/components/Home/SearchInput";
 import { getCarsLists } from "@/services";
 import { useEffect, useState } from "react";
+import{Car} from "../interfaces/index"
 
 export default function Home() {
 
@@ -16,15 +17,15 @@ export default function Home() {
     getCarList_();
   }, [])
 const getCarList_ = async () => {
-  const res: any = await getCarsLists();
+  const res = await getCarsLists() as { carLists: Car[] };
   setCarList(res?.carLists);
   setCarOrgList(res?.carLists);
 }
 const filterCarList = (brand:string) => {
-  const filteredList = carOrgList.filter((car:any) => car.carBrand.toLowerCase() === brand.toLowerCase());
+  const filteredList = carOrgList.filter((car) => car.carBrand.toLowerCase() === brand.toLowerCase());
   setCarList(filteredList);
 }
-const orderedCarList = (order: any) => {
+const orderedCarList = (order: number) => {
   const SortedList = [...carOrgList].sort((a, b) => 
     order === -1 ? a.price - b.price : b.price - a.price
   );
@@ -37,7 +38,7 @@ const orderedCarList = (order: any) => {
       <CarFiltersOption 
       carsList = {carOrgList} 
       setBrand={(value:string)=> filterCarList(value)}
-      orderCarList={(value:any)=> orderedCarList(value)}
+      orderCarList={(value) => orderedCarList(Number(value))}
       />
       <CarLists carsList = {carList} />
     </div>
