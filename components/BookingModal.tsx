@@ -1,12 +1,10 @@
-import Image from "next/image";
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { BookingCarCard } from "./BookingCarCard";
 
 interface BookingModalProps {
-  selectedCar: any;
+  selectedCar: Car;
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
@@ -26,7 +24,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const route = useRouter();
   const { user } = useUser();
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -51,7 +48,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       hygraphId: selectedCar.id,
       name: selectedCar.name,
       price: selectedCar.price,
-      quantity: numberOfDays, // ✅ number of days = rental duration
+      quantity: numberOfDays, 
     },
   ];
 
@@ -81,11 +78,13 @@ const handleSubmit = async (e: React.FormEvent) => {
       window.location.href = data.url; // redirect to Stripe checkout
     } else {
       console.error("Checkout error:", data);
-      alert(data.error || "Error creating booking");
+      setIsLoading(true)
     }
   } catch (err) {
     console.error("Booking error:", err);
     alert("Something went wrong!");
+  }finally{
+    setIsLoading(false)
   }
 };
 

@@ -2,13 +2,13 @@
 
 import { UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React from 'react'
 import { FaUser } from 'react-icons/fa'
 import { useUser } from '@clerk/nextjs'
 import Link from 'next/link'
 
 const Navbar = () => {
- const { isSignedIn, user, isLoaded } = useUser();
+ const { isSignedIn } = useUser();
   return (
 
 

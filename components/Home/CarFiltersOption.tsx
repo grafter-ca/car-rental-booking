@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 
-const CarFiltersOption = ({ carsList, setBrand, orderCarList }: any) => {
-  const [BrandList, setBrandList] = useState<any>([]);
+interface CarFiltersOptionProps {
+  carsList: Car[];
+  setBrand: (brand: string) => void;
+  orderCarList: (order: string | number) => void;
+}
+
+const CarFiltersOption: React.FC<CarFiltersOptionProps> = ({ carsList, setBrand, orderCarList }) => {
+  const [BrandList, setBrandList] = useState<string[]>([]);
   useEffect(() => {
     if (carsList) {
       filterCarList();
     }
   }, [carsList]);
 
-  const Brandset = new Set();
+  const Brandset = new Set<string>();
   const filterCarList = () => {
-    carsList.forEach((elememt: any) => {
-      Brandset.add(elememt.carBrand);
+    carsList.forEach((elememt: Car) => {
+      Brandset.add(elememt.manufacturer); // Change 'manufacturer' to the correct property name if needed
     });
     setBrandList(Array.from(Brandset));
   };

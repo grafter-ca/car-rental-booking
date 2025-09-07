@@ -1,21 +1,6 @@
 import Image from 'next/image';
-import React, { use, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { FaGasPump, FaCarSide, FaChair, FaArrowRight } from 'react-icons/fa';
-
-interface Car {
-  id: string;
-  name: string;
-  price: number;
-  seat: number;
-  carAvg: number;
-  image: { url: string } | null;
-  transmission?: 'Auto' | 'Manual';
-  mpg?: number;
-}
-
-interface CarCardProps {
-  car: Car;
-}
 
 export const CarCard: React.FC<CarCardProps> = ({ car }) => {
 

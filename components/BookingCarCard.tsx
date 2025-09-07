@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React, { useEffect } from 'react';
-import { FaGasPump, FaCarSide, FaChair, FaArrowRight } from 'react-icons/fa';
+import { FaGasPump, FaCarSide, FaChair } from 'react-icons/fa';
 
 interface Car {
   id: string;

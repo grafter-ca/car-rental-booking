@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
 
-  const [carList, setCarList] = useState<any>([])
-  const [carOrgList, setCarOrgList] = useState<any>([])
+  const [carList, setCarList] = useState<Car[]>([])
+  const [carOrgList, setCarOrgList] = useState<Car[]>([])
 
   useEffect(() => {
     getCarList_();
