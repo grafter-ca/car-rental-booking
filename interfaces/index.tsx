@@ -1,4 +1,4 @@
-interface Car {
+export interface Car {
   id: string;
   name: string;
   price: number;
@@ -7,9 +7,11 @@ interface Car {
   image: { url: string } | null;
   transmission?: 'Auto' | 'Manual';
   mpg?: number;
-  manufacturer:string
+  manufacturer:string;
+  carBrand:string
 }
 
-interface CarCardProps {
+
+export interface CarCardProps {
   car: Car;
 }

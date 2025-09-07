@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useUser } from "@clerk/nextjs";
 import { BookingCarCard } from "./BookingCarCard";
+import { Car } from "@/interfaces";
 
 interface BookingModalProps {
   selectedCar: Car;

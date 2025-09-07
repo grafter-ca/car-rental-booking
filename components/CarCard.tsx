@@ -1,3 +1,4 @@
+import { Car, CarCardProps } from '@/interfaces';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { FaGasPump, FaCarSide, FaChair, FaArrowRight } from 'react-icons/fa';

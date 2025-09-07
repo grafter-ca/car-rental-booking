@@ -1,17 +1,7 @@
+import { Car } from '@/interfaces';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { FaGasPump, FaCarSide, FaChair } from 'react-icons/fa';
-
-interface Car {
-  id: string;
-  name: string;
-  price: number;
-  seat: number;
-  carAvg: number;
-  image: { url: string } | null;
-  transmission?: 'Auto' | 'Manual';
-  mpg?: number;
-}
 
 interface BookingCarCardProps {
   car: Car;

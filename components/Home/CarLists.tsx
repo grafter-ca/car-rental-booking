@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import { CarCard } from "../CarCard";
 import { CarCardSkeleton } from "../CarCardSkeleton";
 import { BookingModal } from "../BookingModal";
+import { Car } from "@/interfaces";
 
 interface CarListsProps {
   carsList: Car[];
@@ -24,7 +25,10 @@ export const CarLists: React.FC<CarListsProps> = (props) => {
             <div
               key={index}
               onClick={() => {
-                (window as any).my_modal_1.showModal();
+                const modal = document.getElementById('my_modal_1') as HTMLDialogElement | null;
+                if (modal) {
+                  modal.showModal();
+                }
 
                 setSelectedCar(car);
               }}
