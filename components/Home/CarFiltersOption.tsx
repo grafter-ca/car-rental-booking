@@ -18,7 +18,7 @@ const CarFiltersOption: React.FC<CarFiltersOptionProps> = ({ carsList, setBrand,
       });
       setBrandList(Array.from(Brandset));
     }
-  }, [carsList]); // ✅ no missing dependency warning now
+  }, [carsList]);
 
   return (
     <div className="space-y-4 flex items-center justify-between">
@@ -58,8 +58,8 @@ const CarFiltersOption: React.FC<CarFiltersOptionProps> = ({ carsList, setBrand,
               Manufacturer
             </option>
             {BrandList.map((brand: string, index: number) => (
-              <option key={index} value={brand}>
-                {brand.toUpperCase()}
+              <option key={index} value={brand} className="capitalize">
+                {brand}
               </option>
             ))}
           </select>

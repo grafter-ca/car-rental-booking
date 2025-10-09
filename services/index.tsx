@@ -18,6 +18,9 @@ export const getCarsLists = async () => {
     mpg
     carBrand
     carType
+    location
+    isBooked
+    availableDates
   }
 }
   ` 
