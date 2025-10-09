@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { CarCard } from "../CarCard";
 import { CarCardSkeleton } from "../CarCardSkeleton";
 import { BookingModal } from "../BookingModal";
+import Modal from "../Modal";
 import { Car } from "@/interfaces";
 
 interface CarListsProps {
@@ -12,10 +13,10 @@ interface CarListsProps {
 export const CarLists: React.FC<CarListsProps> = ({ carsList }) => {
   const [isLoaded, setIsLoaded] = useState(true);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (carsList.length > 0) {
-
       const timer = setTimeout(() => setIsLoaded(false), 1000);
       return () => clearTimeout(timer);
     }
@@ -23,8 +24,12 @@ export const CarLists: React.FC<CarListsProps> = ({ carsList }) => {
 
   const openModal = (car: Car) => {
     setSelectedCar(car);
-    const modal = document.getElementById("my_modal_1") as HTMLDialogElement | null;
-    if (modal) modal.showModal();
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedCar(null);
   };
 
   return (
@@ -43,15 +48,10 @@ export const CarLists: React.FC<CarListsProps> = ({ carsList }) => {
             ))}
       </div>
 
-      {/* Booking Modal */}
-      <dialog
-        id="my_modal_1"
-        className="modal modal-middle max-w-3xl w-full rounded-lg bg-white p-0 shadow-2xl ring ring-blue-200"
-      >
-        <div className="p-4">
-          {selectedCar && <BookingModal selectedCar={selectedCar} />}
-        </div>
-      </dialog>
+      {/* ✅ React-controlled Modal */}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {selectedCar && <BookingModal selectedCar={selectedCar} />}
+      </Modal>
     </section>
   );
 };

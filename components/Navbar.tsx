@@ -21,16 +21,18 @@ const Navbar = () => {
         />
         <div className='hidden md:flex gap-5'>
           <Link href="/">
-            <h2 className='hover:bg-blue-500 rounded-full px-3 py-2 cursor-pointer hover:text-white'>Home</h2>
+            <h2 className='hover:bg-blue-500 rounded-full px-3 py-1 cursor-pointer hover:text-white'>Home</h2>
           </Link>
           <Link href="/history">
-            <h2 className='hover:bg-blue-500 rounded-full px-3 py-2 cursor-pointer hover:text-white'>History</h2>
+            <h2 className='hover:bg-blue-500 rounded-full px-3 py-1 cursor-pointer hover:text-white'>History</h2>
           </Link>
           <Link href="/contact">
-            <h2 className='hover:bg-blue-500 rounded-full px-3 py-2 cursor-pointer hover:text-white'>Contact Us</h2>
+            <h2 className='hover:bg-blue-500 rounded-full px-3 py-1 cursor-pointer hover:text-white'>Contact Us</h2>
           </Link>
         </div>
         <div>
+
+          {/*mobile navigation menu and links opened*/}
 
             {isSignedIn ? <UserButton /> : <FaUser size={30} />}
         </div>

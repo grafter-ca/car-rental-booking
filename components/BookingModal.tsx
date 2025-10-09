@@ -1,15 +1,20 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { IoClose } from "react-icons/io5";
+import { X } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import { BookingCarCard } from "./BookingCarCard";
 import { Car } from "@/interfaces";
 
 interface BookingModalProps {
   selectedCar: Car;
+  onClose?: () => void;
 }
 
-export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
+export const BookingModal: React.FC<BookingModalProps> = ({
+  selectedCar,
+  onClose,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,9 +25,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
     dropoffTime: "",
   });
 
+  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const { user } = useUser();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,17 +35,36 @@ export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
     setErrorMessage("");
   };
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setTouched({ ...touched, [e.target.name]: true });
+  };
+
+  const validateField = (name: string, value: string) => {
+    if (!value) return "This field is required.";
+    if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+      return "Enter a valid email.";
+    if (name === "phone" && !/^[0-9]{9,15}$/.test(value))
+      return "Enter a valid phone number.";
+    return "";
+  };
+
+  const getFieldError = (name: string) =>
+    touched[name] ? validateField(name, formData[name as keyof typeof formData]) : "";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user) {
-      return alert("Please log in first");
+    if (!user) return alert("Please log in first");
+    if (Object.values(formData).some((v) => !v)) {
+      setErrorMessage("Please fill in all fields correctly.");
+      return;
     }
 
     const numberOfDays = Math.max(
       1,
       Math.ceil(
-        (new Date(formData.endDate).getTime() - new Date(formData.startDate).getTime()) /
+        (new Date(formData.endDate).getTime() -
+          new Date(formData.startDate).getTime()) /
           (1000 * 60 * 60 * 24)
       )
     );
@@ -54,7 +78,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
       },
     ];
 
-    const totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalAmount = cart.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
 
     try {
       setIsLoading(true);
@@ -87,111 +114,153 @@ export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
     }
   };
 
-  useEffect(() => {
-    if (errorMessage) {
-      const timer = setTimeout(() => setErrorMessage(""), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [errorMessage]);
-
   const isFormValid = Object.values(formData).every(Boolean);
 
+ // ✨ Small gallery animation
+const galleryImages = [
+  { url: "/images/cars.png", name: "Sporty Sedan" },
+  { url: "/images/cars-2.png", name: "Luxury SUV" },
+  { url: "/images/cars.png", name: "Classic Coupe" },
+  { url: "/images/cars-2.png", name: "Offroad Adventure" },
+];
+
   return (
-    <form
-      method="dialog"
+    <motion.form
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 30 }}
+      transition={{ duration: 0.3 }}
       onSubmit={handleSubmit}
-      className="modal-box bg-white rounded-lg shadow-2xl ring ring-blue-200 p-6 my-6 relative space-y-4"
+      className="relative bg-white rounded-2xl shadow-2xl ring ring-blue-200 p-6 my-12 space-y-6 max-h-[85vh] overflow-y-auto"
     >
-      <button
-        type="button"
-        aria-label="Close modal"
-        onClick={() =>
-          (document.getElementById("my_modal_1") as HTMLDialogElement)?.close()
-        }
-        className="absolute top-3 right-3 text-gray-600 hover:text-red-500"
-      >
-        <IoClose size={24} />
-      </button>
+
+      <h3 className="font-bold text-2xl text-center text-gray-800">
+        {`Rent ${selectedCar.name} Car Now`}
+      </h3>
 
       {errorMessage && (
-        <p className="text-center text-red-600 text-base font-medium">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center text-red-600 text-base font-medium"
+        >
           {errorMessage}
-        </p>
+        </motion.p>
       )}
 
-      <h3 className="font-bold text-xl">Rent A Car Now!</h3>
+      {/* Car details card */}
+      <BookingCarCard car={selectedCar} />
 
-      <div className="space-y-4">
-        <BookingCarCard car={selectedCar} />
+     {/* ✨ Animated Gallery Slider */}
+<div className="relative w-full overflow-hidden rounded-xl mt-6">
+  <motion.div
+    className="flex"
+    animate={{ x: [`0%`, `-100%`] }}
+    transition={{
+      repeat: Infinity,
+      repeatType: "mirror",
+      duration: 10,
+      ease: "easeInOut",
+    }}
+  >
+    {[...galleryImages, ...galleryImages].map((img, i) => (
+      <motion.div
+        key={i}
+        className="relative w-1/2 md:w-1/3 flex-shrink-0 overflow-hidden rounded-lg"
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.4 }}
+      >
+        <img
+          src={img.url}
+          alt={img.name || `Car ${i + 1}`}
+          className="w-full h-40 object-cover"
+        />
 
-        <div className="flex flex-col gap-4">
-          <div className="flex space-x-2">
+        {/* Overlay on hover */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 bg-black/50 flex items-center justify-center"
+        >
+          <span className="text-white text-lg font-semibold">
+            {img.name || "Car Image"}
+          </span>
+        </motion.div>
+      </motion.div>
+    ))}
+  </motion.div>
+</div>
+
+
+      {/* Booking form */}
+      <div className="grid gap-4 mt-4">
+        {[
+          ["name", "text", "Your Name"],
+          ["email", "email", "Your Email"],
+          ["phone", "tel", "Phone Number"],
+        ].map(([name, type, placeholder]) => (
+          <div key={name}>
             <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              value={formData.name}
+              type={type}
+              name={name}
+              placeholder={placeholder}
+              value={formData[name as keyof typeof formData]}
               onChange={handleChange}
-              required
-              className="border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 w-full"
+              onBlur={handleBlur}
+              className={`border ${
+                getFieldError(name) ? "border-red-500" : "border-gray-300"
+              } rounded-lg px-3 py-2 focus:ring focus:ring-blue-300 w-full`}
             />
-            <input
-              type="email"
-              name="email"
-              placeholder="Your Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 w-full"
-            />
+            {getFieldError(name) && (
+              <p className="text-red-500 text-sm mt-1">
+                {getFieldError(name)}
+              </p>
+            )}
           </div>
+        ))}
 
-          <div className="flex space-x-2">
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 w-full"
-            />
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 w-full"
-            />
-          </div>
-
-          <div className="flex space-x-2">
-            <input
-              type="time"
-              name="pickupTime"
-              value={formData.pickupTime}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 w-full"
-            />
-            <input
-              type="time"
-              name="dropoffTime"
-              value={formData.dropoffTime}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 w-full"
-            />
-          </div>
-
+        <div className="flex gap-2">
           <input
-            type="tel"
-            name="phone"
-            placeholder="Phone Number"
-            value={formData.phone}
+            type="date"
+            name="startDate"
+            value={formData.startDate}
             onChange={handleChange}
-            required
-            className="border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 w-full"
+            onBlur={handleBlur}
+            className={`border ${
+              getFieldError("startDate")
+                ? "border-red-500"
+                : "border-gray-300"
+            } rounded-lg px-3 py-2 focus:ring focus:ring-blue-300 w-full`}
+          />
+          <input
+            type="date"
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className={`border ${
+              getFieldError("endDate") ? "border-red-500" : "border-gray-300"
+            } rounded-lg px-3 py-2 focus:ring focus:ring-blue-300 w-full`}
+          />
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            type="time"
+            name="pickupTime"
+            value={formData.pickupTime}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300 w-full"
+          />
+          <input
+            type="time"
+            name="dropoffTime"
+            value={formData.dropoffTime}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300 w-full"
           />
         </div>
       </div>
@@ -200,17 +269,20 @@ export const BookingModal: React.FC<BookingModalProps> = ({ selectedCar }) => {
         <button
           type="submit"
           disabled={!isFormValid || isLoading}
-          className={`bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center ${
+          className={`bg-green-600 text-white px-8 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center ${
             isLoading ? "opacity-70 cursor-not-allowed" : ""
           }`}
         >
           {isLoading ? (
-            <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            <>
+              <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              Processing...
+            </>
           ) : (
             "Confirm Booking"
           )}
         </button>
       </div>
-    </form>
+    </motion.form>
   );
 };

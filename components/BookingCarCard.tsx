@@ -40,12 +40,12 @@ export const BookingCarCard: React.FC<BookingCarCardProps> = ({ car }) => {
       </p>
 
       {/* Car Image */}
-      <div className="w-full h-40 relative mb-10">
+      <div className="w-full h-52 lg:h-[350px] relative mb-3">
         <Image
           src={cardata.image?.url || '/images/default-car.png'}
           alt={cardata.name}
           fill
-          className="object-contain rounded"
+          className="object-cover max-h-80  rounded"
         />
       </div>
 

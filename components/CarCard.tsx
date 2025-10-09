@@ -31,7 +31,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
       </p>
 
       {/* Car Image */}
-      <div className="w-full h-40 relative mb-10">
+      <div className="w-full h-56 lg:h-48 relative mb-10">
         <Image
           src={cardata.image?.url || '/images/default-car.png'}
           alt={cardata.name}
