@@ -1,13 +1,13 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider, SignedOut, SignIn, SignedIn } from "@clerk/nextjs";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Home/Footer"; // Import your Footer component
+import { ClerkProvider } from "@clerk/nextjs";
+import ClientAuthWrapper from "@/components/ClientAuthWrapper";
 
 const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["400", "500", "700"], // adjust as needed
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -16,30 +16,22 @@ export const metadata: Metadata = {
   description: "Premium car rental service",
 };
 
+// This needs to be a client component
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${outfit.className} antialiased flex flex-col min-h-screen`}
-        >
-          <SignedIn>
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </SignedIn>
-
-          <SignedOut>
-            <div className="flex items-center justify-center min-h-screen py-20">
-              <SignIn />
-            </div>
-          </SignedOut>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+<body
+  suppressHydrationWarning
+  className={`${outfit.className} antialiased flex flex-col min-h-screen`}
+>        {/* Wrap only inside body */}
+        <ClerkProvider>
+          <ClientAuthWrapper>{children}</ClientAuthWrapper>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

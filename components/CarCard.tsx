@@ -36,7 +36,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
           src={cardata.image?.url || '/images/default-car.png'}
           alt={cardata.name}
           fill
-          className="object-contain rounded transition duration-300 group-hover:opacity-70 group-hover:scale-105"
+          className="object-cover rounded group-hover:opacity-80 group-hover:scale-105 transition duration-500 ease-in-out"
         />
       </div>
 
@@ -56,10 +56,9 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
       {/* Rent Now button on hover */}
       <button
         className="absolute flex items-center justify-center bottom-5 left-1/2 -translate-x-1/2 bg-blue-700 text-white px-4 py-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-[90%] sm:w-[70%] md:w-[60%] lg:w-[90%]"
-        onClick={() => alert(`You have selected to rent the ${cardata.name}`)}
         aria-label={`Rent ${cardata.name}`}
       >
-        Rent Now
+       {`Rent ${cardata.name} Now`}
         <FaArrowRight className="ml-2" />
       </button>
     </div>

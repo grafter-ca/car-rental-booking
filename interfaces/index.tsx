@@ -8,7 +8,10 @@ export interface Car {
   transmission?: 'Auto' | 'Manual';
   mpg?: number;
   manufacturer:string;
-  carBrand:string
+  carBrand:string;
+  location:string;
+  isBooked?:boolean;
+  availableDates:[string];
 }
 
 
